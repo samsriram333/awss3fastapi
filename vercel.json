@@ -1,0 +1,19 @@
+{
+    "version": 2,
+    "builds": [
+      {
+        "src": "awss3.py",
+        "use": "@vercel/python"
+      }
+    ],
+    "routes": [
+      {
+        "src": "/(.*)",
+        "dest": "/awss3.py"
+      }
+    ],
+    "env": {
+      "VERCEL": "1",
+      "FASTAPI_ENV": "production"
+    }
+  }

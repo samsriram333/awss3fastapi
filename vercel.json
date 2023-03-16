@@ -1,19 +1,22 @@
 {
-    "version": 2,
-    "builds": [
-      {
-        "src": "awss3.py",
-        "use": "@vercel/python"
-      }
-    ],
-    "routes": [
-      {
-        "src": "/(.*)",
-        "dest": "/awss3.py"
-      }
-    ],
-    "env": {
-      "VERCEL": "1",
-      "FASTAPI_ENV": "production"
+  "version": 2,
+  "builds": [
+    {
+      "src": "main.py",
+      "use": "@vercel/python"
     }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "main.py"
+    }
+  ],
+  "env": {
+    "BUCKET_NAME": "likedcategorybucket",
+    "AWS_ACCESS_KEY_ID": "AKIAX3ZWXIIEUJXZMR42",
+    "AWS_SECRET_ACCESS_KEY": "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",
+    "VERCEL": "1",
+    "FASTAPI_ENV": "production"
   }
+}

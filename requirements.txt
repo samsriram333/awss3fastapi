@@ -2,3 +2,4 @@ boto3==1.24.23
 uvicorn==0.15.0
 fastapi==0.70.0
 mangum==0.17.0
+python-dotenv==1.0.0

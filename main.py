@@ -5,6 +5,7 @@ import os
 import logging
 import pandas as pd
 from fastapi import FastAPI
+from mangum import Mangum
 
 logger = logging.getLogger(__name__)
 
@@ -12,9 +13,10 @@ app = FastAPI()
 
 s3 = boto3.client(
     's3',
-    aws_access_key_id='AKIAX3ZWXIIEUJXZMR42',
-    aws_secret_access_key='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'
+    aws_access_key_id='***',
+    aws_secret_access_key='****'
 )
+
 
 # bucket_name = os.environ.get('BUCKET_NAME')
 bucket_name = 'likedcategorybucket'     
@@ -29,7 +31,6 @@ logger.addHandler(handler)
 @app.get("/")
 def get_all_users():
     response = s3.list_objects_v2(Bucket=bucket_name)
-    logger.info(f"response: {response}")
     keys = []
     if 'Contents' in response:
         for obj in response['Contents']:
@@ -71,7 +72,6 @@ def get_all_users():
 
 @app.get("/users/{user_id}")
 async def get_userdetails(user_id:int):
-    logger.info("Start the process...")
 # async def get_user_categories(request: Request):
     # user_id = await request.json()
     key = f'individual_user_data/{user_id}.json'
@@ -79,16 +79,13 @@ async def get_userdetails(user_id:int):
         response = s3.get_object(Bucket=bucket_name, Key=key)
         # logger.info(f'resonse value : {response}')
         data = response['Body'].read().decode('utf-8')
-        logger.info(f'data value : {data} ')
         parsed_data = json.loads(data)
-        logger.info(f'parsed_data value : {parsed_data}' )
         file_name = os.path.splitext(os.path.basename(key))[0]
         result = {
             "user_id": int(file_name),
             "fav_category": parsed_data.get('fav_recent10_cat', []) + parsed_data.get('favRecent30_cat', []) + parsed_data.get('All_fav_cat', [])
         }
         logger.info(f"Successfully retrieved data for user {user_id}")
-        logger.info("End the process") 
         return result
     except Exception as e:
         logger.error(f"Failed to retrieve data for user {user_id}: {e}")
@@ -98,6 +95,12 @@ def main():
     # This function will be called by Vercel to run the script
     pass
 
+handler = Mangum(app)
 
 if __name__ == "__main__":
     main()
+
+
+
+
+
